@@ -1,0 +1,5 @@
+.env
+google-setup.json
+ring_auth.json
+.venv/
+.claude/

@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  package-thief-detector:
+    build: .
+    container_name: ring-package-thief-detector
+    restart: unless-stopped
+    environment:
+      # Required: Your Anthropic API key
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      
+      # Optional: Google Drive folder ID for saving flagged images
+      - GOOGLE_DRIVE_FOLDER_ID=${GOOGLE_DRIVE_FOLDER_ID:-}
+      
+      # Optional: Specific doorbell name to monitor (default: all)
+      - RING_DOORBELL_NAME=${RING_DOORBELL_NAME:-}
+      
+      # Optional: Cooldown between motion events in seconds (default: 30)
+      - MOTION_COOLDOWN=${MOTION_COOLDOWN:-30}
+      
+      # Optional: Use push notifications instead of polling
+      - USE_PUSH_NOTIFICATIONS=${USE_PUSH_NOTIFICATIONS:-false}
+    volumes:
+      # Ring authentication token
+      - ./ring_auth.json:/app/ring_auth.json
+      
+      # Google credentials (if using Google Drive)
+      - ./google_credentials.json:/app/google_credentials.json:ro
+      - ./google_token.json:/app/google_token.json
+      
+      # Local backup of flagged images
+      - ./flagged_images:/app/flagged_images
+    
+    # Healthcheck
+    healthcheck:
+      test: ["CMD", "python", "-c", "import ring_doorbell; print('ok')"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  # Optional: n8n for visual workflow editing
+  # Uncomment if you want to use the hybrid approach
+  #
+  # n8n:
+  #   image: n8nio/n8n
+  #   container_name: n8n
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5678:5678"
+  #   environment:
+  #     - N8N_BASIC_AUTH_ACTIVE=true
+  #     - N8N_BASIC_AUTH_USER=${N8N_USER:-admin}
+  #     - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD:-changeme}
+  #     - WEBHOOK_URL=http://localhost:5678/
+  #   volumes:
+  #     - n8n_data:/home/node/.n8n
+
+# volumes:
+#   n8n_data:
