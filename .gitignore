@@ -3,3 +3,4 @@ google-setup.json
 ring_auth.json
 .venv/
 .claude/
+YourProjectName-1.0.token.cache
