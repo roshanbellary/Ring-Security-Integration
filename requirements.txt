@@ -36,9 +36,11 @@ idna==3.11
 ifaddr==0.2.0
 jiter==0.12.0
 multidict==6.7.1
+numpy>=1.24.0
 oauthlib==3.3.1
 openai==2.16.0
 pillow==12.1.0
+pydub>=0.25.1
 propcache==0.4.1
 proto-plus==1.27.0
 protobuf==6.33.4

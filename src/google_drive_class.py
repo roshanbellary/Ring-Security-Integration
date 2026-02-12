@@ -22,7 +22,7 @@ class GoogleDriveWriter():
         self.GOOGLE_CREDENTIAL_FILE_PATH = google_credential_file_path
         self.LOCAL_SAVE_DIR = local_save_dir
         self.GOOGLE_DRIVE_FOLDER_ID = google_drive_folder_id
-    
+         
     def get_google_drive_service(self):
         """
         initialize and return Google Drive service.
@@ -67,7 +67,6 @@ class GoogleDriveWriter():
         image_data: bytes,
         filename: str,
         analysis: dict,
-        folder_id: Optional[str] = None
     ) -> Optional[str]:
         """
         Upload image to Google Drive.
@@ -95,9 +94,11 @@ class GoogleDriveWriter():
             'name': filename,
             'description': json.dumps(analysis, indent=2),
         }
+
+
         
-        if folder_id:
-            file_metadata['parents'] = [folder_id]
+        if self.GOOGLE_DRIVE_FOLDER_ID:
+            file_metadata['parents'] = [self.GOOGLE_DRIVE_FOLDER_ID]
         
         try:
             media = MediaFileUpload(str(temp_path), mimetype='image/jpeg')
